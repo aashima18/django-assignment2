@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!------ Include the above in your HEAD tag ---------->
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="img/ico" href='images/favicon.png'>
+    <title>hitgoalz</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <script src="js/jquery-3.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/base2.css' %}">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/hitgoalz.js"></script>
+    <script src="{% static 'js/base2.js' %}"></script>
+
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
+    <!-- Icon -->
+    <link rel="stylesheet" href="{% static 'fonts/line-icons.css' %}">
+    
+    <!-- Owl carousel -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.css' %}">
+    
+    <!-- Animate -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Responsive Style -->
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#id_msg {
+border-radius: 14px;}
+
+.nav-item a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.nav-item a:hover {
+  background-color: darkcyan;
+  color: black;
+}
+
+.nav-item a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.topnav-right {
+  float: left;
+}
+
+
+
+form{
+                margin-left: 10px;
+                text-align: center;
+                float: left;
+        }
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 5%;
+}
+
+.button:hover {
+  background-color: green;
+}
+label{
+        margin-top: 20px;
+        width: 100px;
+        height: 30px;
+        
+        background-color: #EAEAEA;
+}
+input[type=text],input[type=email]{
+        margin-top: 20px;
+        width: 200px;
+        height: 25px;
+}
+h2{
+  margin-top: 40px;
+  text-align: center;
+}
+.edit{
+        margin-top: 40px;
+        margin-left: 30%;
+        max-width: 400px;
+        height: 550px;
+        border: 1px solid lightgrey;
+        background-color: #EAEAEA;
+        margin-bottom: 20px;
+      }
+
+
+input#id_email {
+    width: 50%;
+    padding: 12px;
+}
+</style>
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+    <!--===============================================
+                      NAVBAR
+===============================================-->
+
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="hamburger">
+            <div class="cta">
+                <div class="toggle-btn type14"></div>
+            </div>
+        </div>
+
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="#">
+    <I>STUDENTS</I>
+  </a>
+
+        <!-- Links -->
+
+ <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">{{ user.username }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+            
+        </ul>
+
+
+    </nav>
+
+
+    <section class="side-bar-warp">
+        <div class="sidebar-menu small-side-bar flowHide">
+            <nav class="">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'student_profile' %}">
+                        <span class="sidebar-icon"><img src="images/dashboard.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'studentchange_password' %}">
+                        <span class="sidebar-icon"><img src="images/create-quest.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Change Password</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teacherlist' %}">
+                        <span class="sidebar-icon"><img src="images/manage-quests.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Make Request to teachers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accepted_request' user.id %}">
+                        <span class="sidebar-icon"><img src="images/leaderboards.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Request assignment/Chat</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'submit_ass' %}">
+                        <span class="sidebar-icon"><img src="images/one-on-one.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Submit Assignment</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'check_remarks' %}">
+                        <span class="sidebar-icon"><img src="images/give-kudos.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Review Remarks</span>
+                       </a>
+                    </li>
+
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'check_tmessages' %}">
+                        <span class="sidebar-icon"><img src="images/settings.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Check messages</span>
+                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                        <span class="sidebar-icon"><img src="images/settings.png" alt=""></span>
+                        <span class="fadeInRight animated nav-link-name name-hide tax-show">Logout</span>
+                        </a>
+                    </li>
+            </nav>
+        </div>
+        
+        
+    </section>
+<div style="margin-left:20%">
+
+       
+      {% block content %}
+
+
+      {% endblock %}
+</div>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/jquery-min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/wow.js' %}"></script>
+    <script src="{% static 'js/jquery.nav.js' %}"></script>
+    <script src="{% static 'js/scrolling-nav.js' %}"></script>
+    <script src="{% static 'js/jquery.easing.min.js' %}"></script>  
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/form-validator.min.js' %}"></script>
+   
+    <!-- <script src="{% static 'js/contact-form-script.min.js' %}"></script> -->
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="section-header text-center">
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Thank you for registering with us</h2>
+    <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
+  </div>
+  <div class="container1">
+  
+
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="generate password">
+</form>
+</div>
+{% comment %} 
+<p style="color: black">Your new password has been set. You can log in now on the <a href=""><button type="submit"  style="background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;">log in page</button></a></p>
+  </div> {% endcomment %}
+{% endblock %}

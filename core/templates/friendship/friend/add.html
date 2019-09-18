@@ -1,0 +1,25 @@
+{% extends 'base2.html' %}
+{% block content %}
+<div class="section-header text-center" style="margin-top:5px; ">
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Say Hi to Teachers</h2>
+    <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
+  </div>
+  <div class="container1" style="height: fit-content;width:fit-content;">       
+<h5 style="color: black">Welcome {{ user.username }}</h5>
+
+
+
+
+
+{% if not teacher_id == request.user.id %}
+{% if errors %}<p>{{ errors|join:", " }}</p>{% endif %}
+<form method="post">
+{% csrf_token %}
+<input type="hidden" name="to_username" value="{{ teacher_id }}" />
+<input type="submit" value="add as a teacher" />
+</form>
+{% endif %}
+
+</div>
+    </div>
+    {% endblock %}

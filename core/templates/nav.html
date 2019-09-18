@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   
+  </head>
+  <body>
+      <!-- Navbar Start -->
+      <nav class="navbar navbar-expand-md bg-inverse fixed-top scrolling-navbar">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          {% comment %} <a href="{% url 'indexx' %}" class="navbar-brand"><img src="{% static 'img/logo.png' %}" alt=""></a>        {% endcomment %}
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="lni-menu"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto w-100 justify-content-end clearfix">
+              <li class="nav-item active">
+                <a class="nav-link" href="#hero-area">
+                  Home
+                </a>
+              </li>
+              
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup' %}">
+                    Registration
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login1' %}">
+                    Login
+                    </a>
+                  </li>
+                  {% comment %} <li class="nav-item">
+                    <a class="nav-link" href="{% url 'student_profile' %}">
+                   student
+                    </a>
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% url 'teacher_profile' %}">
+                   teacher
+                    </a> {% endcomment %}
+                  </li>
+                  <li class="nav-item">
+                      {% block content %}
+
+                      {% endblock %}
+                    </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      
+      <!-- Navbar End -->
+   
+   
+      
+  </body>
+</html>

@@ -1,0 +1,168 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
+    <!-- Icon -->
+    <link rel="stylesheet" href="{% static 'fonts/line-icons.css' %}">
+    
+    <!-- Owl carousel -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.css' %}">
+    
+    <!-- Animate -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Responsive Style -->
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    
+<body>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#id_msg {
+border-radius: 14px;}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: darkcyan;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.topnav-right {
+  float: right;
+}
+.w3-container{
+ 
+ text-align: center;
+
+}
+form{
+                margin-left: 10px;
+                text-align: center;
+                float: left;
+        }
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 5%;
+}
+
+.button:hover {
+  background-color: green;
+}
+label{
+        margin-top: 20px;
+        width: 100px;
+        height: 30px;
+        
+        background-color: #EAEAEA;
+}
+input[type=text],input[type=email]{
+        margin-top: 20px;
+        width: 200px;
+        height: 25px;
+}
+h2{
+  margin-top: 40px;
+  text-align: center;
+}
+.edit{
+        margin-top: 40px;
+        margin-left: 30%;
+        max-width: 400px;
+        height: 550px;
+        border: 1px solid lightgrey;
+        background-color: #EAEAEA;
+        margin-bottom: 20px;
+      }
+
+
+input#id_email {
+    width: 50%;
+    padding: 12px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  
+  <div class="topnav-right">
+    <a href="#">{{ user.username }}</a>
+    <a href="{% url 'logout' %}">Logout</a>
+  </div>
+</div>
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="background-color: darkcyan;height:100%">
+    <a href="{% url 'teacher_profile' %}" class="w3-bar-item w3-button">Profile</a>
+    <a href="{% url 'change_password' %}" class="w3-bar-item w3-button">Change Password</a>
+    <a href="{% url 'addstudent' %}" class="w3-bar-item w3-button">Add Student</a>
+    <a href="{% url 'studentlist' %}" class="w3-bar-item w3-button">Students List</a>
+    <a href="{% url 'request_list' %}" class="w3-bar-item w3-button">Accept the request</a>
+    <a href="{% url 'accepted_srequest' user.id %}" class="w3-bar-item w3-button">Student joined you</a>
+    <a href="{% url 'studentass_list' %}" class="w3-bar-item w3-button">Send Assignment</a>
+    <a href="{% url 'check_ass' %}" class="w3-bar-item w3-button">Check Assignment</a>
+    <a href="{% url 'check_messages' %}" class="w3-bar-item w3-button">Check messages</a>
+    <a href="{% url 'logout' %}" class="w3-bar-item w3-button">Logout</a>
+  </div>
+    
+            
+              
+  <div style="margin-left:20%">
+
+       
+      {% block content %}
+
+
+      {% endblock %}
+</div>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/jquery-min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/wow.js' %}"></script>
+    <script src="{% static 'js/jquery.nav.js' %}"></script>
+    <script src="{% static 'js/scrolling-nav.js' %}"></script>
+    <script src="{% static 'js/jquery.easing.min.js' %}"></script>  
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/form-validator.min.js' %}"></script>
+   
+    <!-- <script src="{% static 'js/contact-form-script.min.js' %}"></script> -->
+  </body>
+</html> 

@@ -1,0 +1,71 @@
+{% extends 'base1.html' %}
+{% block content %}
+<div class="section-header text-center" style="margin-top:5px; ">
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Here is your profile</h2>
+    <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
+  </div>
+  <div class="container1" style="height:fit-content;width:fit-content;">       
+<h5 style="color: black">Welcome {{ user.username }}</h5>
+<!-- <div class="w3-container" style="color:black"></div> -->
+
+<table id="customers">
+            <tr>
+                <th>Student</th>
+                <th>Accept</th>
+                <th>Reject</th>
+               
+            </tr>
+            <tr>
+
+               <td style="color: black">{{ friendship_request.from_user }} wants to join with you </td>
+
+                <td style="color: black"><form method="post" action="{% url 'requests_accept' friendship_request.pk %}">
+                  {% csrf_token %}
+                 <input type="submit" value="accept" />
+                </form></td>
+
+                <td><form method="post" action="{% url 'requests_reject' friendship_request.pk %}">
+                     {% csrf_token %}
+                     <input type="submit" value="reject" />
+                    </form></td>
+            </tr>
+            
+        </table>
+</div>
+    </div>
+    {% endblock %}  
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>{{ friendship_request.from_user }} wants to be friends with {{ friendship_request.to_user }}</div>
+
+<form method="post" action="{% url 'friendship_accept' friendship_request.pk %}">
+{% csrf_token %}
+<input type="submit" value="accept" />
+</form>
+
+<form method="post" action="{% url 'friendship_reject' friendship_request.pk %}">
+{% csrf_token %}
+<input type="submit" value="reject" />
+</form>

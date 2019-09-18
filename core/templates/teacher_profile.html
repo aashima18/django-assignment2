@@ -1,0 +1,26 @@
+{% extends 'base1.html' %}
+{% block content %}
+<div class="section-header text-center" style="margin-top:5px; ">
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Here is your profile</h2>
+    <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
+  </div>
+  <div class="container1">       
+<h5 style="color: black">Welcome {{ user.username }}</h5>
+
+<div class="w3-container" style="color:black">
+  {% if user.Image %}
+    <img src="{{ user.Image.url }}"  height = "150px" width ="150px">
+    {% endif %}
+    <p>Username: {{ user.username }} </p>
+    <p>First Name: {{ user.first_name }} </p>   
+    <p>Last Name: {{ user.last_name }} </p>
+    <p>Email: {{ user.email }} </p>
+    <p>Organization: {{ user.organization }} </p>
+    <p>Address: {{ user.address }} </p>
+
+    <a href="{% url 'teacher_editprofile' %}"><button class="button">Edit Profile</button></a>
+
+
+</div>
+{% endblock %}  
+   

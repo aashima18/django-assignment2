@@ -1,0 +1,43 @@
+{% extends 'base1.html' %}
+{% block content %}
+<div class="section-header text-center" style="margin-top:5px; ">
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Here is your profile</h2>
+    <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
+  </div>
+  <div class="container1" style="height: fit-content;width:fit-content;">       
+<h5 style="color: black">Welcome {{ user.username }}</h5>
+<!-- <div class="w3-container" style="color:black"></div> -->
+
+<table id="customers">
+<tr>
+                <th>Student Request</th>
+                <th>Request Details</th>
+               
+            </tr>
+            {% for friendship_request in requests %}
+            <tr>
+                <td style="color: black"> <li>{{ friendship_request.from_user }} </td>
+                <td><a href="{% url 'requests_detail' friendship_request.id %}"><button type="submit">View</button></a></td>
+                 {% empty %}
+            </tr>
+             <div style="color:black;">no requests :(</div>
+            {% endfor %}
+           
+        </table>
+        
+</div>
+    </div>
+    {% endblock %}  
+       
+
+
+
+
+
+{% comment %} <ul>
+{% for friendship_request in requests %}
+    <li>{{ friendship_request.from_user }} to {{ friendship_request.to_user }} <a href="{% url 'friendship_requests_detail' friendship_request.id %}">view</a></li>
+{% empty %}
+</ul>
+<div>no requests :(</div>
+{% endfor %} {% endcomment %}

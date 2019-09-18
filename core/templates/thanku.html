@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="section-header text-center">
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Login with us</h2>
+    <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
+  </div>
+  <div id="login">
+    <div class="container2">
+        <div id="login-row" class="row justify-content-center align-items-center">
+            <div id="login-column" class="col-md-6">
+                <div id="login-box" class="col-md-12" style="font-size:15px;color:black;max-width: 4500px;height:100px;">
+                <h5><i>Thank you For Registering with us </i><h5>
+                <div id="register-link" class="text-right">
+                            <a href="{% url 'login' %}" class="text-info">login here</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
