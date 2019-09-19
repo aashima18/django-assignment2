@@ -14,18 +14,14 @@ urlpatterns=[
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
 
-    path('profile',views.get_student_profile,name='student_profile'),
-    path('editprofile',views.update_student_profile,name='student_editprofile'),
-
-    path('profile1/',views.get_teacher_profile,name='teacher_profile'),
-    path('editprofile1/',views.update_teacher_profile,name='teacher_editprofile'), 
-
+    path('profile/',views.profile,name='profile'),
+    path('editprofile/',views.update_profile,name='editprofile'), 
     url(r'^password/$', views.change_password, name='change_password'),
-    url(r'^spassword/$', views.studentchange_password, name='studentchange_password'),
 
     path('addstudent/',views.addstudent,name='addstudent'),
     path('studentlist/',views.student_list,name='studentlist'),
-    path('sendassignment/<int:student_id>/',views.teacher_assignment,name='teacher_assignment'),
+    path('sendassignment/<int:student_id>/',views.teacher_assignment,name='assignment'),
+    path('sendassignments/<int:student_id>/',views.student_assignment,name='s_assignment'),
     path('teacherlist/',views.teacher_list,name='teacherlist'),
 
     path('trequest/<int:teacher_id>/',views.friendship_add_friend,name='teacher_request'),
@@ -34,14 +30,13 @@ urlpatterns=[
     path('request_reject/<int:friendship_request_id>/',views.friendship_reject,name='requests_reject'),
     path('request_accept/<int:friendship_request_id>/',views.friendship_accept,name='requests_accept'),
     path('accepted_request/<int:teacher_id>',views.view_friend,name='accepted_request'),
-    path('accepted_srequest/<int:student_id>',views.view_friendss,name='accepted_srequest'),
     path('stu_joined/<str:username>',views.view_friends,name='stu_joined'),
+    path('accepted_trequest/<int:teacher_id>',views.view_friendss,name='accepted_trequest'),
 
 
     path('ass_request/<int:teacher_id>',views.ass_request,name='ass_request'),
     path('studentass_list/',views.studentass_list,name='studentass_list'),
     path('submit_ass/',views.submit_ass,name='submit_ass'),
-    path('student_assignment/<int:teacher_id>/',views.student_assignment,name='student_assignment'),
     path('check_ass/',views.check_ass,name='check_ass'),
     path('remark_ass/<int:student_id>/',views.remark_ass,name='remark_ass'),
     path('check_remarks/',views.check_remarks,name='check_remarks'),

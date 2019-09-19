@@ -22,7 +22,7 @@
                 <td style="color: black">{% get_by_name friendship_context_object_name as var %}
                 {{ User.username }}</td>
                 <td><a href="{% url 'ass_request' User.id %}"><button type="submit">Request Assignment</button></a></td>
-                <td><a href="{% url 'messages' User.id %}"><button type="submit" style="width:100px;height:50px">Chat</button></a></td>
+                <td><a href="{% url 'messagess' User.id %}"><button type="submit" style="width:100px;height:50px">Chat</button></a></td>
                 
             </tr>
             {% endfor %}

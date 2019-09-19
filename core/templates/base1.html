@@ -122,19 +122,23 @@ input#id_email {
 <body>
 
 <div class="topnav">
-  
+    <a class="navbar-brand" href="{% url 'profile' %}">
+    <I>Teacher</I>
+  </a>
+
+
   <div class="topnav-right">
-    <a href="#">{{ user.username }}</a>
+    <a href="{% url 'profile' %}">{{ user.username }}</a>
     <a href="{% url 'logout' %}">Logout</a>
   </div>
 </div>
 <div class="w3-sidebar w3-light-grey w3-bar-block" style="background-color: darkcyan;height:100%">
-    <a href="{% url 'teacher_profile' %}" class="w3-bar-item w3-button">Profile</a>
+    <a href="{% url 'profile' %}" class="w3-bar-item w3-button">Profile</a>
     <a href="{% url 'change_password' %}" class="w3-bar-item w3-button">Change Password</a>
     <a href="{% url 'addstudent' %}" class="w3-bar-item w3-button">Add Student</a>
     <a href="{% url 'studentlist' %}" class="w3-bar-item w3-button">Students List</a>
     <a href="{% url 'request_list' %}" class="w3-bar-item w3-button">Accept the request</a>
-    <a href="{% url 'accepted_srequest' user.id %}" class="w3-bar-item w3-button">Student joined you</a>
+    <a href="{% url 'accepted_trequest' user.id %}" class="w3-bar-item w3-button">Student joined you</a>
     <a href="{% url 'studentass_list' %}" class="w3-bar-item w3-button">Send Assignment</a>
     <a href="{% url 'check_ass' %}" class="w3-bar-item w3-button">Check Assignment</a>
     <a href="{% url 'check_messages' %}" class="w3-bar-item w3-button">Check messages</a>

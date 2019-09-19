@@ -135,9 +135,9 @@ def user_login(request):
              dj_login(request, user)
             
             if user.user_type =='student':  
-                return redirect('student_profile') 
+                return redirect('profile') 
             elif user.user_type =='teacher':
-                return redirect('teacher_profile') 
+                return redirect('profile') 
     else:
         form = PasswordForm()    
         
@@ -146,33 +146,43 @@ def user_login(request):
 
 
 
-# ---------teacher dashboard after login---------
+# ---------different dashboard after login---------
 
 @login_required
-def get_teacher_profile(request):
-    user=request.user
-    users = User.objects.all()
-    return render(request, 'teacher_profile.html', {"users":users})
+def profile(request):   
+        user=request.user
+        users = User.objects.all()
+        if user.user_type =='teacher':
+            return render(request, 'teacher_profile.html', {"users":users})
+        elif user.user_type =='student':  
+            return render(request, 'student_profile.html', {"users":users})
+        else: 
+            return redirect('layout.html')
 
-    # updation of profile--------
+
+# updation of profile--------------------
 
 @login_required
-def update_teacher_profile(request):
+def update_profile(request):
     if request.method == 'POST':
         user_form = UpdateProfile(request.POST, request.FILES , instance=request.user)
         
         if (user_form.is_valid()):
            
             user_form.save()            
-            return HttpResponseRedirect(reverse('teacher_profile'))
+            return HttpResponseRedirect(reverse('profile'))
         
     else:
         user_form = UpdateProfile(instance=request.user)
-    return render(request, 'registration/update_profile_teacher.html', {
-        'user_form': user_form
-    })
+    if request.user.user_type =='student':    
+        return render(request, 'registration/update_profile_student.html', {'user_form': user_form })
+    if request.user.user_type =='teacher':  
+        return render(request, 'registration/update_profile_teacher.html', {'user_form': user_form})      
+    
 
-    #  teacher can change password-----------
+
+
+#--------change password-----------
 
 def change_password(request):
     if request.method == 'POST':
@@ -181,380 +191,390 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             # messages.success(request, 'Your password was successfully updated!')
-            return redirect('teacher_profile')
+            return redirect('profile')
         else:
-            messages.error(request, 'Please correct the error below.')
+            pass
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'change_password.html', {
-        'form': form
-    })
+    if request.user.user_type =='teacher':      
+        return render(request, 'change_password.html', {'form': form})
+    if request.user.user_type =='student':
+        return render(request, 'studentchange_password.html', {'form': form})    
 
-    # Teacher can add student----------------------- 
+
+# Teacher can add student----------------------- 
 
 def addstudent(request):
-    if request.method == 'POST':
-        form = AddStudentForm(request.POST)
-        if form.is_valid():
-                user= form.save(commit=False)
-                user.user_type = form.cleaned_data.get('user_type')
-                user.is_active = False
-                user.save()
-                current_site = get_current_site(request)
-                mail_subject = 'Activate your blog account.'
-                message = render_to_string('acc_active_email.html', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid':urlsafe_base64_encode(force_bytes(user.pk)) ,
-                    'token':account_activation_token.make_token(user),
-                })
-                to_email = form.cleaned_data.get('email')
+    if request.user.user_type =='teacher':  
+        if request.method == 'POST':
+            form = AddStudentForm(request.POST)
+            if form.is_valid():
+                    user= form.save(commit=False)
+                    user.user_type = form.cleaned_data.get('user_type')
+                    user.is_active = False
+                    user.save()
+                    current_site = get_current_site(request)
+                    mail_subject = 'Activate your blog account.'
+                    message = render_to_string('acc_active_email.html', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid':urlsafe_base64_encode(force_bytes(user.pk)) ,
+                        'token':account_activation_token.make_token(user),
+                    })
+                    to_email = form.cleaned_data.get('email')
+                
+                    email = EmailMessage(mail_subject, message, to=[to_email])
+                    email.send()
+                    return HttpResponse('Please confirm your email address to complete the registration')
+        else:
+            form = AddStudentForm()
             
-                email = EmailMessage(mail_subject, message, to=[to_email])
-                email.send()
-                return HttpResponse('Please confirm your email address to complete the registration')
+        return render(request, 'registration/add_student.html', {'form': form})   
     else:
-        form = AddStudentForm()
-        
-    return render(request, 'registration/add_student.html', {'form': form})   
+        return render(request,'error.html')
 
 
  #   list of student in teacher dashboard---------------
-
-def student_list(request):    
-    dataa=User.objects.filter(user_type = 'student')
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'student_list.html',context=context)    
-
-
-
-
-
-
-# ---------student dashboard after login---------------
-
-
-@login_required
-def get_student_profile(request):
-    user=request.user
-    users = User.objects.all()
-    return render(request, 'student_profile.html', {"users":users})
-
-    # updation of profile--------------------
-
-@login_required
-def update_student_profile(request):
-    if request.method == 'POST':
-        user_form = UpdateProfile(request.POST, request.FILES , instance=request.user)
+def student_list(request): 
+    if request.user.user_type =='teacher':    
+        dataa=User.objects.filter(user_type = 'student')
         
-        if (user_form.is_valid()):
-           
-            user_form.save()            
-            return HttpResponseRedirect(reverse('student_profile'))
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'student_list.html',context=context)    
+    else:
+        return render(request,'error.html')
+
+
+
+#-----------list of teacher in student dashboard-----------
+
+def teacher_list(request):   
+    if request.user.user_type =='student':  
+        dataa=User.objects.filter(user_type = 'teacher')
         
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'teacher_list.html',context=context)    
     else:
-        user_form = UpdateProfile(instance=request.user)
-    return render(request, 'registration/update_profile_student.html', {
-        'user_form': user_form
-    })
+        return render(request,'error2.html')
 
 
-    #student change password------------------- 
 
-def studentchange_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            # messages.success(request, 'Your password was successfully updated!')
-            return redirect('student_profile')
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'studentchange_password.html', {
-        'form': form
-    })    
-
-#    list of student-----------------
-
-
-def teacher_list(request):    
-    dataa=User.objects.filter(user_type = 'teacher')
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'teacher_list.html',context=context)    
-
-
+# ---------------student dashboard for making request---------
 
 def friendship_add_friend(request,teacher_id):
-    ctx = {"teacher_id": teacher_id}
-    if request.method == "POST":
-        print("dsad")
-        to_user = User.objects.get(pk=teacher_id)
-        from_user = request.user
-        print(to_user)
-        try:
-            Friend.objects.add_friend(from_user,to_user)
-            print("hghjgj")
-        except AlreadyFriendsError as e:
-            ctx["errors"] = ["%s" % e]
-        else:
-            return redirect("student_profile")
+    if request.user.user_type =='student':  
+        ctx = {"teacher_id": teacher_id}
+        if request.method == "POST":
+            print("dsad")
+            to_user = User.objects.get(pk=teacher_id)
+            from_user = request.user
+            print(to_user)
+            try:
+                Friend.objects.add_friend(from_user,to_user)
+                print("hghjgj")
+            except AlreadyFriendsError as e:
+                ctx["errors"] = ["%s" % e]
+            else:
+                return redirect("student_profile")
 
-    return render(request,"friendship/friend/add.html",ctx)
+        return render(request,"friendship/friend/add.html",ctx)
+    else:
+        return render(request,'error2.html')
 
 
+
+# -----------teacher dashboard for rejecting and accepting request--------------
 def friendship_reject(request, friendship_request_id):
-    print("sdda")
-    """ Reject a friendship request """
-    if request.method == "POST":
-        print("dasc")
-        f_request = get_object_or_404(request.user.friendship_requests_received, id=friendship_request_id)
-        f_request.reject()
-        f_request.delete()
-        return redirect("teacher_profile")
+    if request.user.user_type =='teacher':
+        if request.method == "POST":
+            print("dasc")
+            f_request = get_object_or_404(request.user.friendship_requests_received, id=friendship_request_id)
+            f_request.reject()
+            f_request.delete()
+            return redirect("teacher_profile")
 
-    return redirect(
-        "friendship_requests_detail", friendship_request_id=friendship_request_id)
-
+        return redirect(
+            "friendship_requests_detail", friendship_request_id=friendship_request_id)
+    else:
+        return render(request,'error.html')
 
 
 def friendship_accept(request, friendship_request_id):
-    print("dqwdwe")
-    """ Accept a friendship request """
-    if request.method == "POST":
-        f_request = get_object_or_404(request.user.friendship_requests_received, id=friendship_request_id)
-        f_request.accept()
-        return redirect("stu_joined", username=request.user.username)
+    if request.user.user_type =='teacher':
+        if request.method == "POST":
+            f_request = get_object_or_404(request.user.friendship_requests_received, id=friendship_request_id)
+            f_request.accept()
+            return redirect("stu_joined", username=request.user.username)
 
-    return redirect("friendship_requests_detail", friendship_request_id=friendship_request_id) 
-
+        return redirect("friendship_requests_detail", friendship_request_id=friendship_request_id) 
+    else:
+        return render(request,'error.html')
 
 
 
 def friendship_request_list(request):
-    print("dqwedwe")
-    """ View unread and read friendship requests """
-    friendship_requests = Friend.objects.requests(request.user)
-    # This shows all friendship requests in the database
-    # friendship_requests = FriendshipRequest.objects.filter(rejected__isnull=True)
+    if request.user.user_type =='teacher':
+        friendship_requests = Friend.objects.requests(request.user)
+        # This shows all friendship requests in the database
+        # friendship_requests = FriendshipRequest.objects.filter(rejected__isnull=True)
 
-    return render(request,"friendship/friend/requests_list.html", {"requests": friendship_requests})  
+        return render(request,"friendship/friend/requests_list.html", {"requests": friendship_requests})  
+    else:
+        return render(request,'error.html')
 
 
 def friendship_requests_detail(request, friendship_request_id):
-    print("edwerf")
-    """ View a particular friendship request """
-    f_request = get_object_or_404(FriendshipRequest, id=friendship_request_id)
+    if request.user.user_type =='teacher':
+        f_request = get_object_or_404(FriendshipRequest, id=friendship_request_id)
 
-    return render(request, "friendship/friend/request.html", {"friendship_request": f_request})
+        return render(request, "friendship/friend/request.html", {"friendship_request": f_request})
+    else:
+        return render(request,'error.html')    
+
 
 def view_friends(request, username, template_name="friendship/friend/user_list.html"):
-    """ View the friends of a user """
-    user = get_object_or_404(User, username=username)
-    friends = Friend.objects.friends(user)
-    return render(request, template_name, {
-        get_friendship_context_object_name(): user,
-        'friendship_context_object_name': get_friendship_context_object_name(),
-        'friends': friends,
-    })
+    if request.user.user_type =='teacher':
+        user = get_object_or_404(User, username=username)
+        friends = Friend.objects.friends(user)
+        return render(request, template_name, {get_friendship_context_object_name(): user,'friendship_context_object_name': get_friendship_context_object_name(),'friends': friends,})
+    else:
+        return render(request,'error.html')
+
 
 
 # student dashbord---------------------------
 def view_friend(request,teacher_id):
-    """ View the friends of a user """
-    user = get_object_or_404(User,id=teacher_id)
-    friends = Friend.objects.friends(user)
-    return render(request, "friendship/friend/taccepted_list.html", {get_friendship_context_object_name(): user,'friendship_context_object_name': get_friendship_context_object_name(),'friends': friends,})  
+    if request.user.user_type =='student':
+        user = get_object_or_404(User,id=teacher_id)
+        friends = Friend.objects.friends(user)
+        return render(request, "friendship/friend/taccepted_list.html", {get_friendship_context_object_name(): user,'friendship_context_object_name': get_friendship_context_object_name(),'friends': friends,})  
+    else:
+        return render(request,'error2.html')
 
-# teacher  dashbord---------------------------
-def view_friendss(request,student_id):
-    """ View the friends of a user """
-    user = get_object_or_404(User,id=student_id)
-    friends = Friend.objects.friends(user)
-    return render(request, "friendship/friend/saccepted_list.html", {get_friendship_context_object_name(): user,'friendship_context_object_name': get_friendship_context_object_name(),'friends': friends,})  
-
-
-
-
-
+    
+#teacher dashboard----------------------------    
+def view_friendss(request,teacher_id):    
+    if request.user.user_type =='teacher':
+        user = get_object_or_404(User,id=teacher_id)
+        friends = Friend.objects.friends(user)
+        return render(request, "friendship/friend/saccepted_list.html", {get_friendship_context_object_name(): user,'friendship_context_object_name': get_friendship_context_object_name(),'friends': friends,})  
+    else:
+        return render(request,'error.html')
+    
 
 
 # request for assignment to teacher--------------------
 
 def ass_request(request,teacher_id):
-    ctx = {"teacher_id": teacher_id}
-    if request.method == "POST":
-        form = AssignmenttForm(request.POST,initial={'request':True})
+    if request.user.user_type =='student':
+        ctx = {"teacher_id": teacher_id}
+        if request.method == "POST":
+            form = AssignmenttForm(request.POST,initial={'request':True})
 
-        if form.is_valid():
-            user= form.save(commit=False)
-            print("dsad")
-            user.teacher = User.objects.get(pk=teacher_id)
-            user.student = request.user
-            user.save()
-            return redirect('student_profile')
+            if form.is_valid():
+                user= form.save(commit=False)
+                print("dsad")
+                user.teacher = User.objects.get(pk=teacher_id)
+                user.student = request.user
+                user.save()
+                return redirect('profile')
+        else:
+            form = AssignmenttForm       
+        return render(request,"friendship/friend/ass_request.html",ctx)
     else:
-        form = AssignmenttForm       
-    return render(request,"friendship/friend/ass_request.html",ctx)
-
+        return render(request,'error2.html')
 
 # list of student requested for assignment---------------------------
 
 def studentass_list(request):
-   
-    dataa = Assignment_Request.objects.filter(teacher=request.user)
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'ass_request2.html',context=context)    
+    if request.user.user_type =='teacher':
+        dataa = Assignment_Request.objects.filter(teacher=request.user)
+        
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'ass_request2.html',context=context)    
+    else:
+        return render(request,'error.html')
 
 
 
 #   teacher can send assignment------------------ 
-
-def teacher_assignment(request,student_id):      
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST, request.FILES,)
-        if form.is_valid():
-            a = form.save()
-            a.student = User.objects.get(pk = student_id)
-            a.teacher = request.user
-            a.description = form.cleaned_data['description']
-            a.as_file = form.cleaned_data['as_file']
-            a.save()
-            return redirect('teacher_profile')
-            
+def teacher_assignment(request,student_id):  
+    if request.user.user_type =='teacher':      
+        if request.method == 'POST':
+            form = AssignmentForm(request.POST, request.FILES,)
+            if form.is_valid():
+                a = form.save()
+                a.student = User.objects.get(pk = student_id)
+                a.teacher = request.user
+                a.description = form.cleaned_data['description']
+                a.as_file = form.cleaned_data['as_file']
+                a.save()
+                return redirect('profile')
+                
+        else:
+            form = AssignmentForm()
+        return render(request, 'teacher_assignment.html', {'form': form}) 
     else:
-        form = AssignmentForm()
-    return render(request, 'teacher_assignment.html', {'form': form}) 
+        return render(request,'error.html')
+
+
+
+def student_assignment(request,student_id):  
+    if request.user.user_type =='student':
+        if request.method == 'POST':
+            form = AssignmentForm1(request.POST, request.FILES,)
+            if form.is_valid():
+                a = form.save()
+                a.teacher = User.objects.get(pk = student_id)
+                a.student = request.user
+                a.description = form.cleaned_data['description']
+                a.submitted_file = form.cleaned_data['submitted_file']
+                a.save()
+                return redirect('profile')
+            
+        else:
+            form = AssignmentForm1()
+        return render(request, 'student_assignment.html', {'form': form})     
+    else:
+        return render(request,'error2.html')
 
 
 # list of assignments sent by teachers-------------------------
 def submit_ass(request):
-    dataa = Assignment.objects.filter(student=request.user)
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'submit_ass.html',context=context) 
-
-
-
-# assignmet submitted by student------------------------
-def student_assignment(request,teacher_id): 
-       
-    if request.method == 'POST':
-        form = AssignmentForm1(request.POST, request.FILES,)
-        if form.is_valid():
-            a = form.save()
-            a.teacher = User.objects.get(pk = teacher_id)
-            a.student = request.user
-            a.description = form.cleaned_data['description']
-            a.submitted_file = form.cleaned_data['submitted_file']
-            a.save()
-            return redirect('student_profile')
-            
+    if request.user.user_type =='student':
+        dataa = Assignment.objects.filter(student=request.user)
+        
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'submit_ass.html',context=context) 
     else:
-        form = AssignmentForm1()
-    return render(request, 'student_assignment.html', {'form': form})     
+        return render(request,'error2.html')
+
 
 
 
 def check_ass(request):
-    dataa = Submission.objects.filter(teacher=request.user)
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'check_ass.html',context=context)     
+    if request.user.user_type =='teacher':
+        dataa = Submission.objects.filter(teacher=request.user)
+        
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'check_ass.html',context=context)     
+    else:
+        return render(request,'error.html')
 
 
 def remark_ass(request,student_id):
-    if request.method == 'POST':
-        form = ReviewForm(request.POST, request.FILES,)
-        if form.is_valid():
-            a = form.save()
-            a.student = User.objects.get(pk = student_id)
-            a.teacher = request.user
-            a.rating = form.cleaned_data['rating']
-            a.save()
-            return redirect('teacher_profile')
-            
+    if request.user.user_type =='teacher':
+        if request.method == 'POST':
+            form = ReviewForm(request.POST, request.FILES,)
+            if form.is_valid():
+                a = form.save()
+                a.student = User.objects.get(pk = student_id)
+                a.teacher = request.user
+                a.rating = form.cleaned_data['rating']
+                a.save()
+                return redirect('profile')
+                
+        else:
+            form = ReviewForm()
+        return render(request, 'reviews.html', {'form': form})
     else:
-        form = ReviewForm()
-    return render(request, 'reviews.html', {'form': form})
-
+        return render(request,'error.html')
 
 def check_remarks(request):
-    dataa = Remark.objects.filter(student=request.user)
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'check_remarks.html',context=context)     
+    if request.user.user_type =='student':
+        dataa = Remark.objects.filter(student=request.user)
+        
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'check_remarks.html',context=context)     
+    else:
+        return render(request,'error2.html')
+
 
 # student dashboard-----------------------------
 def messages(request,teacher_id):
-    if request.method == 'POST':
-        form =MessageForm(request.POST)
-        if form.is_valid():
-            a = form.save()
-            a.receiver = User.objects.get(pk = teacher_id)
-            a.sender = request.user
-            a.msg = form.cleaned_data['msg']
-            a.save()
-            return HttpResponseRedirect(reverse('messages',args=(teacher_id,)))
-           
-            
+    if request.user.user_type =='teacher':  
+        if request.method == 'POST':
+            form =MessageForm(request.POST)
+            if form.is_valid():
+                a = form.save()
+                a.receiver = User.objects.get(pk = teacher_id)
+                a.sender = request.user
+                a.msg = form.cleaned_data['msg']
+                a.save()
+                return HttpResponseRedirect(reverse('messages',args=(teacher_id,)))       
+        else:
+            form = MessageForm()
+            query = Q(Q(sender=request.user)&Q(receiver=teacher_id))|Q(Q(sender=teacher_id)&Q(receiver=request.user))
+            dataa = Messages.objects.filter(query).order_by('timestamp')  
+        return render(request, 'messenger.html', {'form': form,'dataa':dataa})
     else:
-        form = MessageForm()
-        query = Q(Q(sender=request.user)&Q(receiver=teacher_id))|Q(Q(sender=teacher_id)&Q(receiver=request.user))
-        dataa = Messages.objects.filter(query).order_by('timestamp')
-    return render(request, 'messenger.html', {'form': form,'dataa':dataa})
+        return render(request,'error.html')
+
+
+
+def messagess(request,student_id):
+    if request.user.user_type =='student':
+        if request.method == 'POST':
+            form =MessageForm(request.POST)
+            if form.is_valid():
+                a = form.save()
+                a.receiver = User.objects.get(pk = student_id)
+                a.sender = request.user
+                a.msg = form.cleaned_data['msg']
+                a.save()
+                return HttpResponseRedirect(reverse('messagess',args=(student_id,)))
+                
+        else:
+            form = MessageForm()
+            query = Q(Q(sender=request.user)&Q(receiver=student_id))|Q(Q(sender=student_id)&Q(receiver=request.user))
+            dataa = Messages.objects.filter(query).order_by('timestamp')
+        return render(request, 'messenger2.html', {'form': form,'dataa':dataa})
+    else:
+        return render(request,'error2.html')
+
+
+
+
+
+
+
+
 
 
 def check_messages(request):
-    dataa = Messages.objects.filter(receiver=request.user)
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'studentmsg.html',context=context)     
+    if request.user.user_type =='teacher': 
+        dataa = Messages.objects.filter(receiver=request.user)
+        
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'studentmsg.html',context=context)     
+    else:
+        return render(request,'error.html')
 
 
 def check_tmessages(request):
-    dataa = Messages.objects.filter(receiver=request.user)
-    
-    context = {
-            'dataa':dataa 
-    }
-    return render(request,'teachermsg.html',context=context)         
-
-
-# Teacher dashboard-------------------------
-def messagess(request,student_id):
-    if request.method == 'POST':
-        form =MessageForm(request.POST)
-        if form.is_valid():
-            a = form.save()
-            a.receiver = User.objects.get(pk = student_id)
-            a.sender = request.user
-            a.msg = form.cleaned_data['msg']
-            a.save()
-            return HttpResponseRedirect(reverse('messagess',args=(student_id,)))
-            
+    if request.user.user_type =='student': 
+        dataa = Messages.objects.filter(receiver=request.user)
+        
+        context = {
+                'dataa':dataa 
+        }
+        return render(request,'teachermsg.html',context=context)         
     else:
-        form = MessageForm()
-        query = Q(Q(sender=request.user)&Q(receiver=student_id))|Q(Q(sender=student_id)&Q(receiver=request.user))
-        dataa = Messages.objects.filter(query).order_by('timestamp')
-    return render(request, 'messenger2.html', {'form': form,'dataa':dataa})
+        return render(request,'error2.html')
+
+
 

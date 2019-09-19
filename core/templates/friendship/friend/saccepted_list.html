@@ -2,7 +2,7 @@
 {% block content %}
 {% load friendshiptags %}
 <div class="section-header text-center" style="margin-top:5px; ">
-    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">Teachers Joined you</h2>
+    <h2 class="section-title wow fadeInDown" data-wow-delay="0.3s">students Joined you</h2>
     <div class="shape wow fadeInDown" data-wow-delay="0.3s"></div>
   </div>
   <div class="container1" style="height: fit-content;width:fit-content;">       
@@ -21,7 +21,7 @@
                 <td style="color: black">{% get_by_name friendship_context_object_name as var %}
                 {{ User.username }}</td>
                 {% comment %} {% comment %} <td><a href="{% url 'ass_request' User.id %}"><button type="submit">Request Assignment</button></a></td> {% endcomment %}
-                <td><a href="{% url 'messagess' User.id %}"><button type="submit" style="width:100px;height:50px">Chat</button></a></td> 
+                <td><a href="{% url 'messages' User.id %}"><button type="submit" style="width:100px;height:50px">Chat</button></a></td> 
             </tr>
             {% endfor %}
         </table>

@@ -18,7 +18,7 @@
                 <td style="color: black">{{ User.sender}}</td>
                 <td style="color: black">{{ User.msg}}</td>
                 <td style="color: black">{{ User.timestamp}}</td>
-                <td><a href="{% url 'messagess' User.sender.id %}"><button type="submit">Reply</button></a></td>
+                <td><a href="{% url 'messages' User.sender.id %}"><button type="submit">Reply</button></a></td>
             </tr>
             {% endfor %}
         </table>

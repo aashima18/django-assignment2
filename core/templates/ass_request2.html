@@ -16,7 +16,7 @@
             {% for User in dataa %}
             <tr>
                 <td style="color: black">{{ User.student}}</td>
-                <td><a href="{% url 'teacher_assignment' User.student.id %}"><button type="submit">Send Assignment</button></a></td>
+                <td><a href="{% url 'assignment' User.student.id %}"><button type="submit">Send Assignment</button></a></td>
             </tr>
             {% endfor %}
         </table>
