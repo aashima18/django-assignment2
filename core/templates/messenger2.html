@@ -8,19 +8,36 @@
   <div class="container1" style="height: fit-content;width:fit-content;">       
 <h5 style="color: black">Welcome {{ user.username }}</h5>
 <div>
- {% for users in dataa %}
-<ul>
-<li style="color:firebrick;">{{ users.sender }}:</li>
-<li style="margin-left: 70px;
-    color: black;
-    background-color: darkcyan;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 19px;
-    width: fit-content; ">{{ users.msg }}</li>
-      <li>{{ users.timestamp }}</li>
+  {% for users in dataa %}
+ {% if users.sender == request.user%}
+
+
+          <p style="color:firebrick; float:left;">{{ users.sender }}:</p><br>
+          <p style="color: black;
+              background-color: darkcyan;
+              color: white;
+              padding: 12px 20px;
+              border: none;
+              border-radius: 19px;
+              width: fit-content;">{{ users.msg }}</p><br>
+      <p>{{ users.timestamp }}</p><br>
+{% else %}
+      <p style="color:firebrick;float:right;">{{ users.sender }}:</p><br>
+    
+          <p style="margin-left: 70px;
+              color: black;
+              background-color:darkgoldenrod;
+              color: white;
+              padding: 12px 20px;
+              border: none;
+              border-radius: 19px;
+              width: fit-content;height:fit-content;
+              float:right;">{{ users.msg }}</p><br><br>
+      <p style = " float:right">{{ users.timestamp }}</p><br>
+
+      
 </ul>
+ {% endif %} 
 {% endfor %}
 </div> 
 <div>

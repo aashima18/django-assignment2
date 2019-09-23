@@ -414,6 +414,7 @@ def teacher_assignment(request,student_id):
                 a.teacher = request.user
                 a.description = form.cleaned_data['description']
                 a.as_file = form.cleaned_data['as_file']
+                # a.Submit_date = form.cleaned_data['Submit_date']
                 a.save()
                 return redirect('profile')
                 
@@ -425,19 +426,24 @@ def teacher_assignment(request,student_id):
 
 
 
-def student_assignment(request,student_id):  
+def student_assignment(request,student_id,ass_id):  
     if request.user.user_type =='student':
         if request.method == 'POST':
             form = AssignmentForm1(request.POST, request.FILES,)
             if form.is_valid():
-                a = form.save()
-                a.teacher = User.objects.get(pk = student_id)
-                a.student = request.user
-                a.description = form.cleaned_data['description']
-                a.submitted_file = form.cleaned_data['submitted_file']
-                a.save()
-                return redirect('profile')
-            
+                c = Assignment.objects.get(id = ass_id)
+                d = c . Submit_date
+                if d > timezone.now():
+                    a = form.save()
+                    a.teacher = User.objects.get(pk = student_id)
+                    a.student = request.user
+                    a.assignment =  Assignment.objects.get(id = ass_id)
+                    a.description = form.cleaned_data['description']
+                    a.submitted_file = form.cleaned_data['submitted_file']
+                    a.save()
+                    return redirect('profile')
+                else:
+                   return render(request,'validationerror.html')
         else:
             form = AssignmentForm1()
         return render(request, 'student_assignment.html', {'form': form})     
@@ -472,13 +478,14 @@ def check_ass(request):
         return render(request,'error.html')
 
 
-def remark_ass(request,student_id):
+def remark_ass(request,student_id,ass_id):
     if request.user.user_type =='teacher':
         if request.method == 'POST':
             form = ReviewForm(request.POST, request.FILES,)
             if form.is_valid():
                 a = form.save()
                 a.student = User.objects.get(pk = student_id)
+                a.assignment = Submission.objects.get(id = ass_id)
                 a.teacher = request.user
                 a.rating = form.cleaned_data['rating']
                 a.save()
@@ -505,44 +512,55 @@ def check_remarks(request):
 # student dashboard-----------------------------
 def messages(request,teacher_id):
     if request.user.user_type =='teacher':  
-        if request.method == 'POST':
-            form =MessageForm(request.POST)
-            if form.is_valid():
-                a = form.save()
-                a.receiver = User.objects.get(pk = teacher_id)
-                a.sender = request.user
-                a.msg = form.cleaned_data['msg']
-                a.save()
-                return HttpResponseRedirect(reverse('messages',args=(teacher_id,)))       
+        user = get_object_or_404(User,pk=teacher_id)
+        friends = Friend.objects.friends(user)
+        if friends:
+            if request.method == 'POST':
+                form =MessageForm(request.POST)
+                if form.is_valid():
+                    a = form.save()
+                    a.receiver = User.objects.get(pk = teacher_id)
+                    a.sender = request.user
+                    a.msg = form.cleaned_data['msg']
+                    a.save()
+                    return HttpResponseRedirect(reverse('messages',args=(teacher_id,)))       
+            else:
+                form = MessageForm()
+                query = Q(Q(sender=request.user)&Q(receiver=teacher_id))|Q(Q(sender=teacher_id)&Q(receiver=request.user))
+                dataa = Messages.objects.filter(query).order_by('timestamp')  
+            return render(request, 'messenger.html', {'form': form,'dataa':dataa})
         else:
-            form = MessageForm()
-            query = Q(Q(sender=request.user)&Q(receiver=teacher_id))|Q(Q(sender=teacher_id)&Q(receiver=request.user))
-            dataa = Messages.objects.filter(query).order_by('timestamp')  
-        return render(request, 'messenger.html', {'form': form,'dataa':dataa})
-    else:
-        return render(request,'error.html')
+            return render(request,'error.html')
+    else: 
+        return render(request,'error.html')       
 
 
 
 def messagess(request,student_id):
     if request.user.user_type =='student':
-        if request.method == 'POST':
-            form =MessageForm(request.POST)
-            if form.is_valid():
-                a = form.save()
-                a.receiver = User.objects.get(pk = student_id)
-                a.sender = request.user
-                a.msg = form.cleaned_data['msg']
-                a.save()
-                return HttpResponseRedirect(reverse('messagess',args=(student_id,)))
-                
+        user = get_object_or_404(User,pk=student_id)
+        friends = Friend.objects.friends(user)
+        if friends:
+            if request.method == 'POST':
+                form =MessageForm(request.POST)
+                if form.is_valid():
+                    a = form.save()
+                    a.receiver = User.objects.get(pk = student_id)
+                    a.sender = request.user
+                    a.msg = form.cleaned_data['msg']
+                    a.save()
+                    return HttpResponseRedirect(reverse('messagess',args=(student_id,)))
+                    
+            else:
+                form = MessageForm()
+                query = Q(Q(sender=request.user)&Q(receiver=student_id))|Q(Q(sender=student_id)&Q(receiver=request.user))
+                dataa = Messages.objects.filter(query).order_by('timestamp')
+            return render(request, 'messenger2.html', {'form': form,'dataa':dataa})
         else:
-            form = MessageForm()
-            query = Q(Q(sender=request.user)&Q(receiver=student_id))|Q(Q(sender=student_id)&Q(receiver=request.user))
-            dataa = Messages.objects.filter(query).order_by('timestamp')
-        return render(request, 'messenger2.html', {'form': form,'dataa':dataa})
+            return render(request,'error2.html')
     else:
-        return render(request,'error2.html')
+            return render(request,'error2.html')
+
 
 
 

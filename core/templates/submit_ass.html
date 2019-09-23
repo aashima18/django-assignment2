@@ -21,10 +21,12 @@
                 <td style="color: black">{{ User.teacher}}</td>
                 <td style="color: black"><a href = "{{ User.as_file.url}}">{{ User.as_file.url}}</a></td>
                 <td style="color: black">{{ User.Submit_date}}</td>
-                <td><a href="{% url 's_assignment' User.teacher.id  %}"><button type="submit">Submit Assignment</button></a></td>
+                <td><a href="{% url 's_assignment' User.teacher.id  User.id %}"><button type="submit">Submit Assignment</button></a></td>
             </tr>
             {% endfor %}
         </table>
 </div>
     </div>
+
+    
     {% endblock %} 

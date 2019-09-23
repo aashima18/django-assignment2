@@ -125,12 +125,19 @@ class AddStudentForm(forms.ModelForm):
 
 
 class AssignmentForm(forms.ModelForm):
-   
+    # Submit_date = forms.DateTimeField()
     description = forms.CharField(max_length=255)
     as_file = forms.FileField(required =True)
     class Meta:
         model = Assignment
-        fields = ('description','as_file')        
+        fields = ('description','Submit_date','as_file')        
+
+
+
+
+
+
+
 
 class AssignmentForm1(forms.ModelForm):
    

@@ -10,7 +10,7 @@
 <table id="customers">
             <tr>
                 <th>Teacher</th>
-                {% comment %} <th> assignment</th> {% endcomment %}
+                <th> assignment No</th> 
                 <th> Remarks</th>
 
                
@@ -18,7 +18,7 @@
             {% for User in dataa %}
             <tr>
                 <td style="color: black">{{ User.teacher}}</td>
-                {% comment %} <td style="color: black"><a href="{{ User.assignment.url}}">{{ User.assignment.url}}</a></td> {% endcomment %}
+               <td style="color: black">{{ User.assignment}}</td>
                 <td style="color: black">{{ User.rating}}</td>
 
             </tr>

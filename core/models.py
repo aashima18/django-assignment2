@@ -50,7 +50,7 @@ class Assignment(models.Model):
     description = models.CharField(max_length=255, blank=True)
     as_file = models.FileField(upload_to='documents/', validators=[validate_file1_extension])
     Submit_date = models.DateTimeField(default=get_deadline,blank=True)
-    uploaded = models.DateTimeField(default=datetime.now(),blank=True)
+    uploaded = models.DateTimeField(default=datetime.now,blank=True)
 
 
 
@@ -65,7 +65,7 @@ class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, null=True,related_name='assignment')
     submitted_file = models.FileField(upload_to='documents/', validators=[validate_file1_extension])
     description = models.CharField(max_length=255, blank=True)
-    Submitted_date = models.DateTimeField(default=datetime.now(),blank=True)
+    Submitted_date = models.DateTimeField(default=datetime.now,blank=True)
 
 
 
@@ -89,7 +89,7 @@ class Remark(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, null=True,related_name='studentss') 
     assignment = models.ForeignKey(Submission, on_delete=models.CASCADE, null=True,related_name='assignments')
     rating = models.CharField(choices=STAR,max_length=25, null=True, blank=True)
-   
+    
 
    
 
@@ -98,7 +98,7 @@ class Messages(models.Model):
     sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, null=True)
     receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE, null=True)
     msg = models.TextField(max_length=1000)
-    timestamp = models.DateTimeField(default=datetime.now(),blank=True)
+    timestamp = models.DateTimeField(default=datetime.now,blank=True)
     
     class Meta:
         verbose_name_plural = "Messages"

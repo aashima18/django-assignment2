@@ -21,7 +21,7 @@ urlpatterns=[
     path('addstudent/',views.addstudent,name='addstudent'),
     path('studentlist/',views.student_list,name='studentlist'),
     path('sendassignment/<int:student_id>/',views.teacher_assignment,name='assignment'),
-    path('sendassignments/<int:student_id>/',views.student_assignment,name='s_assignment'),
+    path('sendassignments/<int:student_id>/<int:ass_id>/',views.student_assignment,name='s_assignment'),
     path('teacherlist/',views.teacher_list,name='teacherlist'),
 
     path('trequest/<int:teacher_id>/',views.friendship_add_friend,name='teacher_request'),
@@ -38,7 +38,7 @@ urlpatterns=[
     path('studentass_list/',views.studentass_list,name='studentass_list'),
     path('submit_ass/',views.submit_ass,name='submit_ass'),
     path('check_ass/',views.check_ass,name='check_ass'),
-    path('remark_ass/<int:student_id>/',views.remark_ass,name='remark_ass'),
+    path('remark_ass/<int:student_id>/<int:ass_id>',views.remark_ass,name='remark_ass'),
     path('check_remarks/',views.check_remarks,name='check_remarks'),
 
     path('messages/<int:teacher_id>',views.messages,name='messages'),
