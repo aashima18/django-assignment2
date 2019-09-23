@@ -3,7 +3,7 @@ from django.conf.urls import url
 from .import views
 from .views import *
 # from .views import AuthView, MessengerView, RestAPIView
-from rest_framework.urlpatterns import format_suffix_patterns
+# from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns=[
     path('',views.indexx,name='indexx'),

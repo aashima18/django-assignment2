@@ -1,0 +1,15 @@
+html, body {
+  height: 100%;
+  color: #444;
+}
+.wrapper {
+    min-height: 80%;
+    height: auto !important;
+    margin: 0 auto -35px;
+}
+footer {
+    margin-bottom: 10px;
+}
+hr {
+    border-color: #ccc;
+}

@@ -1,0 +1,25 @@
+.users_list {
+    max-height: 440px;
+}
+.chat_box {
+    min-height: 440px;
+}
+.messages {
+    border: thin solid #bbb;
+    padding: 15px;
+    min-height: 400px;
+    border-bottom: none;
+}
+.messages p {
+    font-size: 19px;
+}
+.messages small {
+    color: gray;
+    font-size: 14px;
+}
+h2 label {
+    color: darkslategrey;
+}
+.list-group-item {
+    cursor: pointer;
+}
